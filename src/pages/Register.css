@@ -1,0 +1,83 @@
+/* BACKGROUND */
+.reg-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #c7d2fe, #e0e7ff, #ffe8f0);
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* CARD */
+.reg-card {
+  width: 380px;
+  background: white;
+  padding: 35px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.6s ease;
+}
+
+/* Slide Up Animation */
+@keyframes slideUp {
+  from { transform: translateY(25px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.reg-title {
+  font-size: 26px;
+  font-weight: bold;
+  color: #1f1f1f;
+  margin-bottom: 10px;
+}
+
+/* INPUT */
+.reg-label {
+  display: block;
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.reg-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 18px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.reg-input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 6px rgba(79, 70, 229, 0.5);
+}
+
+/* BUTTON */
+.reg-btn {
+  width: 100%;
+  background: #4f46e5;
+  color: white;
+  padding: 12px;
+  border: none;
+  font-size: 17px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.reg-btn:hover {
+  background: #3730a3;
+  transform: scale(1.03);
+}
