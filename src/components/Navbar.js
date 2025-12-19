@@ -7,7 +7,7 @@ export default function Navbar() {
   return (
     <nav className="nav-container">
       <div className="nav-wrapper">
-        <div className="nav-logo">🎓 LMS</div>
+        <div className="nav-logo"> LMS</div>
 
         <div className="nav-links">
           <Link className={location.pathname === "/" ? "active" : ""} to="/">Home</Link>

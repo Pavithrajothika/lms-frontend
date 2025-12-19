@@ -1,64 +1,107 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
+import { getAllCourses } from "../utils/getAllCourses";
 
 export default function CourseView() {
   const { id } = useParams();
+  const courseId = Number(id);
+  const location = useLocation();
 
-  // Default videos for built-in courses
-  const defaultVideos = {
-    1: [
-      { title: "React Introduction", url: "https://www.youtube.com/embed/SqcY0GlETPk" },
-      { title: "React Components", url: "https://www.youtube.com/embed/kVeOpcw4GWY" },
-    ],
-    2: [
-      { title: "JS Introduction", url: "https://www.youtube.com/embed/W6NZfCO5SIk" },
-      { title: "JS Functions Explained", url: "https://www.youtube.com/embed/jS4aFq5-91M" },
-    ],
-    3: [
-      { title: "Java Introduction", url: "https://www.youtube.com/embed/eIrMbAQSU34" },
-      { title: "Java OOP Concepts", url: "https://www.youtube.com/embed/8cm1x4bC610" },
-    ],
-    4: [
-      { title: "Python Introduction", url: "https://www.youtube.com/embed/kqtD5dpn9C8" },
-      { title: "Python Variables & Data", url: "https://www.youtube.com/embed/6iF8Xb7Z3wQ" },
-    ],
+  const fromContinueLearning =
+    location.state?.fromContinueLearning === true;
+
+  const allCourses = getAllCourses();
+
+  const course = allCourses.find(
+    c => Number(c.id) === courseId
+  );
+
+  const lessons = course?.videos || [];
+
+  if (lessons.length === 0) {
+    return (
+      <div className="courseview-page">
+        <h2>No lessons available</h2>
+        <Link to="/courses">
+          <button className="back-btn">⬅ Back</button>
+        </Link>
+      </div>
+    );
+  }
+
+  const updateProgress = (lessonIndex) => {
+  const user = localStorage.getItem("currentUser");
+  const progressKey = `courseProgress_${user}`;
+
+  const progressData =
+    JSON.parse(localStorage.getItem(progressKey)) || {};
+
+  let watchedLessons =
+    progressData[courseId]?.watchedLessons || [];
+
+  if (watchedLessons.includes(lessonIndex)) {
+    alert("This lesson already completed");
+    return;
+  }
+
+  watchedLessons.push(lessonIndex);
+
+  const percent = Math.round(
+    (watchedLessons.length / lessons.length) * 100
+  );
+
+  progressData[courseId] = {
+    watchedLessons,
+    percent
   };
 
-  // ⭐ Get instructor-added courses
-  const extraCourses =
-    JSON.parse(localStorage.getItem("extraCourses")) || [];
+  // CORRECT KEY
+  localStorage.setItem(
+    progressKey,
+    JSON.stringify(progressData)
+  );
 
-  // Find if this course is user-created
-  const selectedCourse = extraCourses.find(c => String(c.id) === String(id));
+  alert("Lesson marked as completed ");
+};
 
 
-  // If user-created → use stored videos
-  const lessons = selectedCourse
-    ? selectedCourse.videos
-    : defaultVideos[id];
 
   return (
-    <div className="container">
-      <h2>Course ID: {id}</h2>
+    <div className="courseview-page">
+      <h2 className="course-title">
+        {course.title}
+      </h2>
 
-      <Link to="/courses">
-        <button className="button" style={{ background: "#6366f1" }}>
-          ⬅ Back to Courses
-        </button>
+      <Link to="/continue-learning">
+        <button className="back-btn">⬅ Back</button>
       </Link>
 
-      {lessons?.map((l, index) => (
-        <div key={index} className="card lesson-card">
-          <h3>{l.title}</h3>
+      <div className="lesson-grid">
+        {lessons.map((l, i) => (
+          <div
+            className="lesson-card-new"
+            key={i}
+          >
+            <h3>{l.title}</h3>
+       <div className="video-wrapper">
+            <iframe
+              src={l.url}
+              title={l.title}
+              allowFullScreen
+              
+            ></iframe>
+</div>
+         {fromContinueLearning && (
+  <button
+    className="course-btn"
+    onClick={() => updateProgress(i)}
+  >
+    ✅ Mark as Completed
+  </button>
+)}
 
-          <iframe
-            width="500"
-            height="300"
-            src={l.url}
-            title={l.title}
-            allowFullScreen
-          ></iframe>
-        </div>
-      ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

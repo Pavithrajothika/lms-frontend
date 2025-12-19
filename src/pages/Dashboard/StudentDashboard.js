@@ -1,42 +1,48 @@
-import "../../App.css";
-
 export default function StudentDashboard() {
+  const user = localStorage.getItem("currentUser");
+const enrollKey = `enrolledCourses_${user}`;
 
-  const enrolled = Number(localStorage.getItem("enrolled")) || 0;
-  const pending = Number(localStorage.getItem("pending")) || 0;
-  const progress = Number(localStorage.getItem("progress")) || 0;
-  const savedCourseId = localStorage.getItem("courseId");
+const enrolledCourses =
+  JSON.parse(localStorage.getItem(enrollKey)) || [];
 
-  const goToCourses = () => {
-    window.location.href = "/courses";
-  };
+//  JUST READ NAME (no logic change)
+  const users =
+    JSON.parse(localStorage.getItem("users")) || [];
 
-  const continueLearning = () => {
-    if (!savedCourseId || enrolled === 0) {
-      alert("Please enroll in a course first!");
-      return;
-    }
-    window.location.href = `/course/${savedCourseId}`;
-  };
+  const currentUserData =
+    users.find(u => u.email === user);
+
+  const name =
+    currentUserData?.name || "Student";
+
+
+
+  
 
   return (
     <div className="dashboard-page">
       <div className="dashboard-card-ui">
-        <h2 className="dashboard-title">Student Dashboard</h2>
+       <h2 className="dashboard-title">
+  👋 Welcome {name}
+</h2>
 
-        <p className="dashboard-info">📘 Enrolled Courses: {enrolled}</p>
-        <p className="dashboard-info">📝 Assignments Pending: {pending}</p>
-        <p className="dashboard-info">📊 Progress: {progress}%</p>
+        <p className="dashboard-info">
+          📘 Enrolled Courses: {enrolledCourses.length}
+        </p>
 
-        {enrolled === 0 ? (
-          <button className="dashboard-btn" onClick={goToCourses}>
-            Enroll Course
-          </button>
-        ) : (
-          <button className="dashboard-btn" onClick={continueLearning}>
-            Continue Learning
-          </button>
-        )}
+        <button
+          className="dashboard-btn"
+          onClick={() => window.location.href = "/courses"}
+        >
+          ➕ Enroll New Course
+        </button>
+
+        <button
+          className="dashboard-btn"
+          onClick={() => window.location.href = "/continue-learning"}
+        >
+          ▶ Continue Learning
+        </button>
       </div>
     </div>
   );

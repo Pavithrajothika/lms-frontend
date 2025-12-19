@@ -55,3 +55,38 @@
   font-weight: 600;
   box-shadow: 0 3px 8px rgba(79, 70, 229, 0.3);
 }
+
+
+/* 📱 MOBILE VIEW NAVBAR FIX */
+@media (max-width: 768px) {
+
+  .nav-container {
+    padding: 10px 0;
+  }
+
+  .nav-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  .nav-logo {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .nav-links {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+}

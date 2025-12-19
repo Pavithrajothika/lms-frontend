@@ -1,44 +1,58 @@
 import { useState } from "react";
 import "../App.css";
+import "./AddCourse.css";
 
 export default function AddCourse() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [img, setImg] = useState("");
 
-  // Video inputs
   const [video1, setVideo1] = useState("");
   const [video2, setVideo2] = useState("");
 
   const handleAddCourse = () => {
-    if (!title || !desc || !img) {
-      alert("Please fill all fields");
+    // FULL VALIDATION
+    if (!title || !desc || !img || !video1 || !video2) {
+      alert("Please fill all fields including videos");
       return;
     }
 
     const newCourse = {
-      id: Date.now(), // unique course id
+      id: Date.now(),
       title,
       desc,
       img,
       videos: [
-        { title: "Lesson 1", url: video1 },
-        { title: "Lesson 2", url: video2 },
+        { title: `${title} - Introduction`, url: video1 },
+        { title: `${title} - Advanced Concepts`, url: video2 },
       ],
     };
 
-    // Save in LocalStorage
-    const existing = JSON.parse(localStorage.getItem("extraCourses")) || [];
-    existing.push(newCourse);
+    const user = localStorage.getItem("currentUser");
 
-    localStorage.setItem("extraCourses", JSON.stringify(existing));
+    /*  Instructor-wise save */
+    const instructorKey = `extraCourses_${user}`;
+    const instructorCourses =
+      JSON.parse(localStorage.getItem(instructorKey)) || [];
 
-    // Increase Published Count
-    const published = Number(localStorage.getItem("published")) || 0;
-    localStorage.setItem("published", published + 1);
+    instructorCourses.push(newCourse);
+    localStorage.setItem(
+      instructorKey,
+      JSON.stringify(instructorCourses)
+    );
+
+    /* Global save (for students) */
+    const allCourses =
+      JSON.parse(localStorage.getItem("extraCourses_ALL")) || [];
+
+    allCourses.push(newCourse);
+    localStorage.setItem(
+      "extraCourses_ALL",
+      JSON.stringify(allCourses)
+    );
 
     alert("Course Added Successfully!");
-    window.location.href = "/courses";
+    window.location.href = "/instructor"; //  correct redirect
   };
 
   return (
@@ -47,19 +61,39 @@ export default function AddCourse() {
         <h2>Add New Course</h2>
 
         <label>Course Title</label>
-        <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input
+          className="input"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
         <label>Description</label>
-        <input className="input" value={desc} onChange={(e) => setDesc(e.target.value)} />
+        <input
+          className="input"
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+        />
 
         <label>Image URL</label>
-        <input className="input" value={img} onChange={(e) => setImg(e.target.value)} />
+        <input
+          className="input"
+          value={img}
+          onChange={(e) => setImg(e.target.value)}
+        />
 
         <label>YouTube Video 1</label>
-        <input className="input" value={video1} onChange={(e) => setVideo1(e.target.value)} />
+        <input
+          className="input"
+          value={video1}
+          onChange={(e) => setVideo1(e.target.value)}
+        />
 
         <label>YouTube Video 2</label>
-        <input className="input" value={video2} onChange={(e) => setVideo2(e.target.value)} />
+        <input
+          className="input"
+          value={video2}
+          onChange={(e) => setVideo2(e.target.value)}
+        />
 
         <button className="button" onClick={handleAddCourse}>
           Add Course
